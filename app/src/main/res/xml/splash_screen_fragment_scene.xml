@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:autoTransition="animateToEnd"
+        motion:duration="2000">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:scaleX="1"
+                motion:framePosition="0"
+                motion:motionTarget="@+id/splashScreenImage" />
+            <KeyAttribute
+                android:scaleY="1"
+                motion:framePosition="0"
+                motion:motionTarget="@+id/splashScreenImage" />
+            <KeyAttribute
+                android:scaleX="0.7"
+                motion:framePosition="20"
+                motion:motionTarget="@+id/splashScreenImage" />
+            <KeyAttribute
+                android:scaleY="0.7"
+                motion:framePosition="20"
+                motion:motionTarget="@+id/splashScreenImage" />
+            <KeyAttribute
+                android:scaleX="0.7"
+                motion:framePosition="40"
+                motion:motionTarget="@+id/splashScreenImage" />
+            <KeyAttribute
+                android:scaleY="0.7"
+                motion:framePosition="40"
+                motion:motionTarget="@+id/splashScreenImage" />
+            <KeyAttribute
+                android:scaleX="1"
+                motion:framePosition="60"
+                motion:motionTarget="@+id/splashScreenImage" />
+            <KeyAttribute
+                android:scaleY="1"
+                motion:framePosition="60"
+                motion:motionTarget="@+id/splashScreenImage" />
+        </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start"></ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end"></ConstraintSet>
+</MotionScene>
