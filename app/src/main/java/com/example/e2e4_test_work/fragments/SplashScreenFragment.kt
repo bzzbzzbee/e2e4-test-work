@@ -37,11 +37,11 @@ class SplashScreenFragment : Fragment() {
                 findNavController().navigate(direction)
             }
 
-            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) { }
+            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {}
 
-            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) { }
+            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {}
 
-            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) { }
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {}
         })
     }
 

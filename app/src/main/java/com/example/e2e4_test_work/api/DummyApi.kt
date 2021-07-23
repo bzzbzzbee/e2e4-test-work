@@ -18,7 +18,7 @@ class DummyApi {
     private var features: MutableList<Feature> = mutableListOf()
 
     fun getFutures(location: Location): MutableList<Feature> {
-        if(features.isEmpty()) {
+        if (features.isEmpty()) {
             repeat(10) {
                 features.add(
                     Feature.fromGeometry(

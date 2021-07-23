@@ -66,8 +66,8 @@ class MapFragment : Fragment(), PermissionsListener {
                         fragment.requireContext(),
 
                         fragment.getString(R.string.new_location) +
-                                result.lastLocation?.latitude.toString() + ", " +
-                                result.lastLocation?.longitude.toString(),
+                                result.lastLocation?.latitude?.toFloat().toString() + ", " +
+                                result.lastLocation?.longitude?.toFloat().toString(),
                         Toast.LENGTH_SHORT
                     ).show()
 
@@ -83,7 +83,7 @@ class MapFragment : Fragment(), PermissionsListener {
                         fragment.mapbox.style?.getSourceAs(SOURCE_ID)
                     source?.setGeoJson(
                         FeatureCollection.fromFeatures(
-                            //Не совсем понятно, как могла бы выглядить респонс от апи(У яндекса видел параметр spn для радиуса подходящих маркеров), или самому
+                            //Не совсем понятно, как мог бы выглядить респонс от апи(У яндекса видел параметр spn для зоны поиска), или самому
                             //надо было бы отбирать подходящие локации.
                             fragment.dummyApi.getFutures(it)
                         )
@@ -131,7 +131,8 @@ class MapFragment : Fragment(), PermissionsListener {
             ResourcesCompat.getDrawable(
                 resources,
                 ic_marker,
-                null)!!
+                null
+            )!!
         )
 
         style.addSource(GeoJsonSource(SOURCE_ID))
