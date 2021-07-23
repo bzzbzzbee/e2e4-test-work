@@ -8,13 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.NonNull
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import com.example.e2e4_test_work.BuildConfig
-import com.example.e2e4_test_work.R
+import com.example.e2e4_test_work.*
+import com.example.e2e4_test_work.R.drawable.ic_marker
+import com.example.e2e4_test_work.api.DummyApi
 import com.example.e2e4_test_work.databinding.MapsFragmentBinding
 import com.mapbox.android.core.location.*
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
+import com.mapbox.geojson.FeatureCollection
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
@@ -24,9 +27,12 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.*
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.ref.WeakReference
-
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MapFragment : Fragment(), PermissionsListener {
@@ -37,12 +43,12 @@ class MapFragment : Fragment(), PermissionsListener {
     private lateinit var mapView: MapView
     private lateinit var mapbox: MapboxMap
 
+    @Inject
+    lateinit var dummyApi: DummyApi
+
     private lateinit var permissionManager: PermissionsManager
 
     private var locationEngine: LocationEngine? = null
-
-    private val DEFAULT_INTERVAL_IN_MILLISECONDS = 1000L
-    private val DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5
 
     private val callback: MapsFragmentLocationCallback =
         MapsFragmentLocationCallback(this)
@@ -55,13 +61,13 @@ class MapFragment : Fragment(), PermissionsListener {
             val fragment = fragmentWeakReference.get()
             fragment?.let {
                 result.lastLocation?.let {
+
                     Toast.makeText(
                         fragment.requireContext(),
-                        String.format(
-                            fragment.getString(R.string.new_location),
-                            result.lastLocation?.latitude.toString(),
-                            result.lastLocation?.longitude.toString()
-                        ),
+
+                        fragment.getString(R.string.new_location) +
+                                result.lastLocation?.latitude.toString() + ", " +
+                                result.lastLocation?.longitude.toString(),
                         Toast.LENGTH_SHORT
                     ).show()
 
@@ -72,19 +78,28 @@ class MapFragment : Fragment(), PermissionsListener {
                                 .location(it)
                                 .build()
                         )
+
+                    val source: GeoJsonSource? =
+                        fragment.mapbox.style?.getSourceAs(SOURCE_ID)
+                    source?.setGeoJson(
+                        FeatureCollection.fromFeatures(
+                            //Не совсем понятно, как могла бы выглядить респонс от апи(У яндекса видел параметр spn для радиуса подходящих маркеров), или самому
+                            //надо было бы отбирать подходящие локации.
+                            fragment.dummyApi.getFutures(it)
+                        )
+                    )
                 }
             }
         }
 
         override fun onFailure(ex: Exception) {
-            Log.d("LocationChangeActivity", ex.localizedMessage)
+            Log.e("LocationChangeActivity", ex.localizedMessage)
             val fragment = fragmentWeakReference.get()
             Toast.makeText(
                 fragment?.requireContext(), ex.localizedMessage,
                 Toast.LENGTH_SHORT
             ).show()
         }
-
     }
 
     override fun onCreateView(
@@ -96,14 +111,39 @@ class MapFragment : Fragment(), PermissionsListener {
         _binding = MapsFragmentBinding.inflate(inflater, container, false)
 
         mapView = binding.mapView
+
         mapView.onCreate(savedInstanceState)
+
         mapView.getMapAsync { mapboxMap ->
             mapbox = mapboxMap
+            mapbox.setMaxZoomPreference(13.0)
             mapbox.setStyle(Style.MAPBOX_STREETS) { style ->
+                setStyle(style)
                 enableLocation(style)
             }
         }
         return binding.root
+    }
+
+    private fun setStyle(style: Style) {
+        style.addImage(
+            ICON_ID,
+            ResourcesCompat.getDrawable(
+                resources,
+                ic_marker,
+                null)!!
+        )
+
+        style.addSource(GeoJsonSource(SOURCE_ID))
+
+        style.addLayer(
+            SymbolLayer(LAYER_ID, SOURCE_ID)
+                .withProperties(
+                    iconImage(ICON_ID),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(true)
+                )
+        )
     }
 
     private fun enableLocation(@NonNull style: Style) {
@@ -137,12 +177,11 @@ class MapFragment : Fragment(), PermissionsListener {
                 .useDefaultLocationEngine(false)
                 .build()
 
-        locationComponent.apply {
-            activateLocationComponent(locationComponentActivationOptions)
-            isLocationComponentEnabled = true
-            cameraMode = CameraMode.TRACKING
-            renderMode = RenderMode.NORMAL
-        }
+        locationComponent.activateLocationComponent(locationComponentActivationOptions)
+        locationComponent.isLocationComponentEnabled = true
+        locationComponent.cameraMode = CameraMode.TRACKING
+        locationComponent.renderMode = RenderMode.NORMAL
+
     }
 
     override fun onExplanationNeeded(p0: MutableList<String>?) {

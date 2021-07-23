@@ -2,5 +2,5 @@
     <string name="app_name">e2e4-test-work</string>
     <string name="user_location_permission_explanation">We need to get your permission in order to track your location on a map</string>
     <string name="user_location_permission_not_granted">=(</string>
-    <string name="new_location">New location</string>
+    <string name="new_location">New location: </string>
 </resources>
