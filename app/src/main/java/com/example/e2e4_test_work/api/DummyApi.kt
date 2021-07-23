@@ -10,7 +10,7 @@ import kotlin.random.Random
 class DummyApi {
 
     //0.1 градус что примерно равнол 11.1 км
-    private val tenKmDouble = 0.0174533
+    private val tenKmDouble: Double = 0.0174532925
 
     private fun generateLocations(lonOrLat: Double) =
         Random.nextDouble(lonOrLat - tenKmDouble, lonOrLat + tenKmDouble)

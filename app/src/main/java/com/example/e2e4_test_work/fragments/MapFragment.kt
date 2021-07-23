@@ -62,15 +62,6 @@ class MapFragment : Fragment(), PermissionsListener {
             fragment?.let {
                 result.lastLocation?.let {
 
-                    Toast.makeText(
-                        fragment.requireContext(),
-
-                        fragment.getString(R.string.new_location) +
-                                result.lastLocation?.latitude?.toFloat().toString() + ", " +
-                                result.lastLocation?.longitude?.toFloat().toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
-
                     fragment.mapbox.locationComponent
                         .forceLocationUpdate(
                             LocationUpdate
@@ -116,7 +107,6 @@ class MapFragment : Fragment(), PermissionsListener {
 
         mapView.getMapAsync { mapboxMap ->
             mapbox = mapboxMap
-            mapbox.setMaxZoomPreference(13.0)
             mapbox.setStyle(Style.MAPBOX_STREETS) { style ->
                 setStyle(style)
                 enableLocation(style)
