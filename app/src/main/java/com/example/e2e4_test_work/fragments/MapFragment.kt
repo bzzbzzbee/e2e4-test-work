@@ -98,7 +98,7 @@ class MapFragment : Fragment(), PermissionsListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Mapbox.getInstance(requireContext(), BuildConfig.MapboxAccessToken)
+        Mapbox.getInstance(requireContext(), getString(R.string.mapbox_access_token))
         _binding = MapsFragmentBinding.inflate(inflater, container, false)
 
         mapView = binding.mapView
