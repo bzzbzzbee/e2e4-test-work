@@ -76,6 +76,7 @@ class MapFragment : Fragment(), PermissionsListener {
                         FeatureCollection.fromFeatures(
                             //Не совсем понятно, как мог бы выглядить респонс от апи(У яндекса видел параметр spn для зоны поиска), или самому
                             //надо было бы отбирать подходящие локации.
+                            //TODO generate random points if locations difference more then 100m??
                             fragment.dummyApi.getFutures(it)
                         )
                     )
@@ -156,10 +157,12 @@ class MapFragment : Fragment(), PermissionsListener {
             .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME)
             .build()
 
-        locationEngine?.requestLocationUpdates(request, callback, Looper.getMainLooper())
-        locationEngine?.getLastLocation(callback)
+        /*1*/locationEngine?.requestLocationUpdates(request, callback, Looper.getMainLooper())
+        /*2*/locationEngine?.getLastLocation(callback)
     }
 
+    //TODO add fab? <- 1, 2 + permission check + location engine check?(idk)
+    //TODO add permission check in onResume
     @SuppressWarnings("MissingPermission")
     private fun initializeLocationComponent(style: Style) {
         val locationComponent: LocationComponent = mapbox.locationComponent

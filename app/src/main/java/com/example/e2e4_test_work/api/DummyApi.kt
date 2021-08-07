@@ -9,9 +9,12 @@ import kotlin.random.Random
 @Singleton
 class DummyApi {
 
-    //0.1 градус что примерно равнол 11.1 км
-    private val tenKmDouble: Double = 0.0174532925
-
+    companion object {
+        //0.1 градус что примерно равнол 11.1 км
+        const val tenKmDouble: Double = 0.0174532925
+    }
+    private var currentLocation: Location? = null
+    //TODO поиграть с апдейтами
     private fun generateLocations(lonOrLat: Double) =
         Random.nextDouble(lonOrLat - tenKmDouble, lonOrLat + tenKmDouble)
 
