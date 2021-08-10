@@ -9,15 +9,16 @@
         android:id="@+id/locationFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="64dp"
+        android:backgroundTint="@color/gray"
         android:clickable="true"
+        android:contentDescription="Center cam"
         android:focusable="true"
-        android:paddingRight="8dp"
-        android:paddingBottom="24dp"
         mapbox:layout_constraintBottom_toBottomOf="@+id/mapView"
         mapbox:layout_constraintEnd_toEndOf="parent"
-        mapbox:srcCompat="@drawable/ic_baseline_my_location_24"
-        android:background="@color/mapbox_blue"
-        android:contentDescription="Center cam" />
+        mapbox:srcCompat="@drawable/ic_baseline_near_me_24" />
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"

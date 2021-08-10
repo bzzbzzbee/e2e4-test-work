@@ -10,11 +10,10 @@ import kotlin.random.Random
 class DummyApi {
 
     companion object {
-        //0.1 градус что примерно равнол 11.1 км
-        const val tenKmDouble: Double = 0.0174532925
+        //1 градус что примерно равно 111 км
+        const val tenKmDouble: Double = 0.3
     }
-    private var currentLocation: Location? = null
-    //TODO поиграть с апдейтами
+
     private fun generateLocations(lonOrLat: Double) =
         Random.nextDouble(lonOrLat - tenKmDouble, lonOrLat + tenKmDouble)
 
@@ -22,7 +21,7 @@ class DummyApi {
 
     fun getFutures(location: Location): MutableList<Feature> {
         if (features.isEmpty()) {
-            repeat(10) {
+            repeat(50) {
                 features.add(
                     Feature.fromGeometry(
                         Point.fromLngLat(
