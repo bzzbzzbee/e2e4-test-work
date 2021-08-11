@@ -10,7 +10,7 @@ import kotlin.random.Random
 class DummyApi {
 
     companion object {
-        //1 градус что примерно равно 111 км
+        //1 градус примерно равен 111 км
         const val tenKmDouble: Double = 0.3
     }
 

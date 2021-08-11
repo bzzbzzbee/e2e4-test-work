@@ -1,6 +1,5 @@
 package com.example.e2e4_test_work.fragments
 
-import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -77,11 +76,7 @@ class MapFragment : Fragment(), PermissionsListener {
 
                     source?.setGeoJson(
                         FeatureCollection.fromFeatures(
-                            //Не совсем понятно, как мог бы выглядить респонс от апи(У яндекса видел параметр spn для зоны поиска), или самому
-                            //надо было бы отбирать подходящие локации.
-                            //TODO chain request view model -> repo -> api
                             fragment.mapsViewModel.getFeatures(it)
-
                         )
                     )
                 }
@@ -120,9 +115,7 @@ class MapFragment : Fragment(), PermissionsListener {
 
         binding.locationFAB.setOnClickListener {
             if (isPermissionsGranted()) {
-                initializeLocationComponent(mapbox.style!!)
-                locationEngine?.removeLocationUpdates(callback)
-                initializeLocationEngine()
+                enableLocationEngineSafe(mapbox.style!!)
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -164,6 +157,12 @@ class MapFragment : Fragment(), PermissionsListener {
             permissionManager = PermissionsManager(this)
             permissionManager.requestLocationPermissions(activity)
         }
+    }
+
+    private fun enableLocationEngineSafe(@NonNull style: Style) {
+        initializeLocationComponent(style)
+        locationEngine?.removeLocationUpdates(callback)
+        initializeLocationEngine()
     }
 
     @SuppressWarnings("MissingPermission")
@@ -229,9 +228,7 @@ class MapFragment : Fragment(), PermissionsListener {
 
     private fun onResumeIfPermissionsGranted() {
         if (isPermissionsGranted() && mapLoaded) {
-            initializeLocationComponent(mapbox.style!!)
-            locationEngine?.removeLocationUpdates(callback)
-            initializeLocationEngine()
+            enableLocationEngineSafe(mapbox.style!!)
         }
     }
 
